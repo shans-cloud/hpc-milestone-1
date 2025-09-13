@@ -69,17 +69,17 @@ void board_populate(struct Game *g) {
 void board_update(struct Game *g) {
     for (int i = 0; i < g->rows; i++) {
         for (int j = 0; j < g->columns; j++) {
-            int alive_neighbors = cell_neighbours(g, i, j);
+            int alive_neighbours = cell_neighbours(g, i, j);
 
             // Apply Game of Life rules.
             if (g->board[i * g->columns + j] == ALIVE) {
-                if (alive_neighbors < 2 || alive_neighbors > 3) {
+                if (alive_neighbours < 2 || alive_neighbours > 3) {
                     g->next_board[i * g->columns + j] = DEAD; 
                 } else {
                     g->next_board[i * g->columns + j] = ALIVE; 
                 }
             } else {
-                if (alive_neighbors == 3) {
+                if (alive_neighbours == 3) {
                     g->next_board[i * g->columns + j] = ALIVE; 
                 } else {
                     g->next_board[i * g->columns + j] = DEAD; 
@@ -95,18 +95,18 @@ void board_update(struct Game *g) {
 }
 
 int cell_neighbours(struct Game *g, int i, int j) {
-    int alive_neighbors = 0;
+    int alive_neighbours = 0;
     for (int di = -1; di <= 1; di++) {
         for (int dj = -1; dj <= 1; dj++) {
             if (di == 0 && dj == 0) continue; 
             int ni = i + di;
             int nj = j + dj;
             if (ni >= 0 && ni < g->rows && nj >= 0 && nj < g->columns) {
-                alive_neighbors += g->board[ni * g->columns + nj];
+                alive_neighbours += g->board[ni * g->columns + nj];
             }
         }
     }
-    return alive_neighbors;
+    return alive_neighbours;
 }
 
 void board_print(const struct Game *g) {
