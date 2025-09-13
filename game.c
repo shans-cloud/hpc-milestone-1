@@ -63,8 +63,9 @@ void board_populate(struct Game *g) {
     // Initialising only the inner board, leaving the padding as DEAD.
     for (int i = 1; i <= g->rows; i++) {
         for (int j = 1; j <= g->columns; j++) {
-            g->board[i * g->padded_columns + j] = 
-            (rand() % 1000) < DENSITY ? ALIVE : DEAD;
+            if (rand() % 10 < DENSITY) {
+                g->board[i * g->padded_columns + j] = ALIVE;
+            }
         }
     }
 }
@@ -73,13 +74,14 @@ void board_update(struct Game *g) {
     for (int i = 1; i <= g->rows; i++) {
         for (int j = 1; j <= g->columns; j++) {
             int alive_neighbours = cell_neighbours(g, i, j);
+            int index = i * g->padded_columns + j;
 
             // Apply Game of Life rules.
-            if (g->board[i * g->padded_columns + j] == ALIVE) {
-                g->next_board[i * g->padded_columns + j] =
+            if (g->board[index] == ALIVE) {
+                g->next_board[index] =
                     (alive_neighbours == 2 || alive_neighbours == 3) ? ALIVE : DEAD;
             } else {
-                g->next_board[i * g->padded_columns + j] =
+                g->next_board[index] =
                     (alive_neighbours == 3) ? ALIVE : DEAD;
             }
         }
@@ -113,12 +115,11 @@ int cell_neighbours(struct Game *g, int i, int j) {
 void board_print(const struct Game *g) {
     for (int i = 0; i < g->padded_rows; i++) {
         for (int j = 0; j < g->padded_columns; j++) {
-            if (i == 0 || i == g->padded_rows - 1 || j == 0 || j == g->padded_columns - 1) {
-                // Padding border.
-                printf("-");
+            bool cell = g->board[i * g->padded_columns + j];
+            if (cell == ALIVE) {
+                printf("X ");
             } else {
-                // Real board cells.
-                printf("%c", g->board[i * g->padded_columns + j] == ALIVE ? '#' : '.');
+                printf(". ");
             }
         }
         printf("\n");
