@@ -23,12 +23,12 @@ void animation_draw(const struct Game *g) {
     // Cell colour to white.
     SDL_SetRenderDrawColor(g->renderer, COLOUR_WHITE);
     SDL_FRect rect = {0, 0, CELL_SIZE, CELL_SIZE};
-    for (int i = 0; i < g->rows; i++) {
+    for (int i = 1; i <= g->rows; i++) {
         // Compute y only once.
-        rect.y = i * CELL_SIZE;
-        for (int j = 0; j < g->columns; j++) {
-            if (g->board[i * g->columns + j] == ALIVE) {
-                rect.x = j * CELL_SIZE;
+        rect.y = (i-1) * CELL_SIZE;
+        for (int j = 1; j <= g->columns; j++) {
+            if (g->board[i * g->padded_columns + j] == ALIVE) {
+                rect.x = (j-1) * CELL_SIZE;
                 SDL_RenderFillRect(g->renderer, &rect);
             }
         }
