@@ -1,6 +1,6 @@
 #include "game.h"
 
-bool game_new(struct Game **game) {
+bool game_new(struct Game **game, SDL_Renderer *renderer) {
     *game = calloc(1, sizeof(struct Game));
     if (*game == NULL) {
         fprintf(stderr, "Failed to allocate memory for Game struct.\n");
@@ -8,9 +8,9 @@ bool game_new(struct Game **game) {
     }
 
     struct Game *g = *game;
+    g->renderer = renderer;
     g->rows = WINDOW_HEIGHT / CELL_SIZE;
     g->columns = WINDOW_WIDTH / CELL_SIZE;
-
     g->board = calloc((size_t)(g->rows * g->columns), sizeof(bool));
     if (g->board == NULL) {
         fprintf(stderr, "Failed to allocate memory for board.\n");
@@ -50,7 +50,7 @@ void board_free(struct Game **game) {
             g->next_board = NULL;
             printf("Next board memory freed.\n");
         }
-
+        g->renderer = NULL;
         free(*game);
         *game = NULL;
         printf("Game resources freed.\n");

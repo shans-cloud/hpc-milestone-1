@@ -12,10 +12,11 @@ struct Game {
     bool *next_board;
     int rows;
     int columns;
+    SDL_Renderer *renderer;
 };
 
 // Function declarations
-bool game_new(struct Game **game);
+bool game_new(struct Game **game, SDL_Renderer *renderer);
 void game_run(struct Game *g);
 void board_free(struct Game **game);
 void board_populate(struct Game *game);

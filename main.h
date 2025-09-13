@@ -16,5 +16,6 @@
 #define COLOUR_BLACK 0, 0, 0, 255
 #define SEED 42 // Fixed seed for reproducibility.
 #define MAX_ITERATIONS 1000 // Benchmarking limit.
+#define WITH_ANIMATIONS 0 // 1 for yes, 0 for no
 
 #endif // MAIN_H

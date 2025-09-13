@@ -1,17 +1,16 @@
 # Compiler and flags
 CC = gcc
 CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pg
-
-# For animations with SDL3:
-# CFLAGS += -F/Library/Frameworks
-# LDFLAGS = -framework SDL3 -Wl,-rpath,/Library/Frameworks
+LDFLAGS =
 
 # Project files
 TARGET = gol
-
 SRCS = main.c game.c
+
 # For animations with SDL3:
-# SRCS += animation.c
+CFLAGS += -F/Library/Frameworks
+LDFLAGS += -framework SDL3 -Wl,-rpath,/Library/Frameworks
+SRCS += animations.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -20,7 +19,7 @@ all: $(TARGET)
 
 # Linking the executable
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ 
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Compile any .c file to .o
 %.o: %.c
