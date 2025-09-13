@@ -96,16 +96,44 @@ void board_update(struct Game *g) {
 
 int cell_neighbours(struct Game *g, int i, int j) {
     int alive_neighbours = 0;
-    for (int di = -1; di <= 1; di++) {
-        for (int dj = -1; dj <= 1; dj++) {
-            if (di == 0 && dj == 0) continue; 
-            int ni = i + di;
-            int nj = j + dj;
-            if (ni >= 0 && ni < g->rows && nj >= 0 && nj < g->columns) {
-                alive_neighbours += g->board[ni * g->columns + nj];
-            }
-        }
+
+    // Top-left
+    if (i > 0 && j > 0) alive_neighbours += g->board[(i-1) * g->columns + (j-1)];
+    
+    // Top
+    if (i > 0) alive_neighbours += g->board[(i-1) * g->columns + j];
+
+    // Top-right
+    if (i > 0 && j < g->columns - 1)
+        alive_neighbours += g->board[(i-1) * g->columns + (j+1)];  
+
+    // Left
+    if (j > 0) {
+        alive_neighbours += g->board[i * g->columns + (j-1)];
+        if (alive_neighbours > 3) return alive_neighbours;
     }
+    // Right
+    if (j < g->columns - 1) {
+        alive_neighbours += g->board[i * g->columns + (j+1)];
+        if (alive_neighbours > 3) return alive_neighbours;
+    }
+
+    // Bottom-left
+    if (i < g->rows - 1 && j > 0) {
+        alive_neighbours += g->board[(i+1) * g->columns + (j-1)];
+        if (alive_neighbours > 3) return alive_neighbours;
+    }
+    // Bottom
+    if (i < g->rows - 1) {
+        alive_neighbours += g->board[(i+1) * g->columns + j];
+        if (alive_neighbours > 3) return alive_neighbours;
+    }
+    // Bottom-right
+    if (i < g->rows - 1 && j < g->columns - 1) {
+        alive_neighbours += g->board[(i+1) * g->columns + (j+1)];
+        if (alive_neighbours > 3) return alive_neighbours;
+    }
+
     return alive_neighbours;
 }
 
