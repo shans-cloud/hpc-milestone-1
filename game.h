@@ -12,6 +12,8 @@ struct Game {
     bool *next_board;
     int rows;
     int columns;
+    int padded_rows;
+    int padded_columns;
     SDL_Renderer *renderer;
 };
 
