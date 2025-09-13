@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pg
+CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pg -O0
 LDFLAGS =
 
 # Project files
