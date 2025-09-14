@@ -73,7 +73,22 @@ void board_populate(struct Game *g) {
 void board_update(struct Game *g) {
     for (int i = 1; i <= g->rows; i++) {
         for (int j = 1; j <= g->columns; j++) {
-            int alive_neighbours = cell_neighbours(g, i, j);
+            int alive_neighbours = 0;
+
+            // Top row
+            alive_neighbours += g->board[(i-1) * g->padded_columns + (j-1)];
+            alive_neighbours += g->board[(i-1) * g->padded_columns + (j)];
+            alive_neighbours += g->board[(i-1) * g->padded_columns + (j+1)];
+
+            // Middle row
+            alive_neighbours += g->board[(i)   * g->padded_columns + (j-1)];
+            alive_neighbours += g->board[(i)   * g->padded_columns + (j+1)];
+
+            // Bottom row
+            alive_neighbours += g->board[(i+1) * g->padded_columns + (j-1)];
+            alive_neighbours += g->board[(i+1) * g->padded_columns + (j)];
+            alive_neighbours += g->board[(i+1) * g->padded_columns + (j+1)];
+
             int index = i * g->padded_columns + j;
 
             // Apply Game of Life rules.
@@ -91,25 +106,6 @@ void board_update(struct Game *g) {
     bool *temp = g->board;
     g->board = g->next_board;
     g->next_board = temp;
-}
-
-int cell_neighbours(struct Game *g, int i, int j) {
-    int count = 0;
-    // Top row
-    count += g->board[(i-1) * g->padded_columns + (j-1)];
-    count += g->board[(i-1) * g->padded_columns + (j)];
-    count += g->board[(i-1) * g->padded_columns + (j+1)];
-
-    // Middle row
-    count += g->board[(i)   * g->padded_columns + (j-1)];
-    count += g->board[(i)   * g->padded_columns + (j+1)];
-
-    // Bottom row
-    count += g->board[(i+1) * g->padded_columns + (j-1)];
-    count += g->board[(i+1) * g->padded_columns + (j)];
-    count += g->board[(i+1) * g->padded_columns + (j+1)];
-
-    return count;
 }
 
 void board_print(const struct Game *g) {
