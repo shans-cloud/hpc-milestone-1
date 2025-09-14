@@ -62,48 +62,46 @@ void board_populate(struct Game *g) {
     srand(SEED);
     // Initialising only the inner board, leaving the padding as DEAD.
     for (int i = 1; i <= g->rows; i++) {
-        int middle_row_index = i * g->padded_columns;
+        int index = i * g->padded_columns;
         for (int j = 1; j <= g->columns; j++) {
             if (rand() % 10 < DENSITY) {
-                g->board[middle_row_index + j] = ALIVE;
+                g->board[index + j] = ALIVE;
             }
         }
     }
 }
 
 void board_update(struct Game *g) {
-    for (int i = 1; i <= g->rows; i++) {
-        for (int j = 1; j <= g->columns; j++) {
-            int alive_neighbours = 0;
+    int stride = g->padded_columns;
+    int start = stride + 1; // Start at (1,1)
+    /* End at (rows, columns) because:
+        (g->padded_rows * stride): Whole padded board
+        - stride: Last padded row
+        - 1: Last padded column
+    */
+    int end = (g->padded_rows * stride) - stride - 1;
 
-            int top_row_index = (i-1) * g->padded_columns;
-            int middle_row_index = i * g->padded_columns;
-            int bottom_row_index = (i+1) * g->padded_columns;
+    for (int index = start; index < end; index++) {
+        int col = index % stride;
+        if (col == 0 || col == stride - 1) continue; // Skip padded columns.
 
-            // Top row
-            alive_neighbours += g->board[top_row_index + (j-1)];
-            alive_neighbours += g->board[top_row_index + (j)];
-            alive_neighbours += g->board[top_row_index + (j+1)];
+        // The indices of the top and bottom neighbours.
+        int top = index - stride;
+        int bottom = index + stride;
 
-            // Middle row
-            alive_neighbours += g->board[middle_row_index + (j-1)];
-            alive_neighbours += g->board[middle_row_index + (j+1)];
+        int alive_neighbours =
+            g->board[top - 1] +     g->board[top] +     g->board[top + 1] +
+            g->board[index - 1] +                       g->board[index + 1] +
+            g->board[bottom - 1] +  g->board[bottom] +  g->board[bottom + 1];
 
-            // Bottom row
-            alive_neighbours += g->board[bottom_row_index + (j-1)];
-            alive_neighbours += g->board[bottom_row_index + (j)];
-            alive_neighbours += g->board[bottom_row_index + (j+1)];
-
-            int index = middle_row_index + j;
-
-            // Apply Game of Life rules.
-            if (g->board[index] == ALIVE) {
-                g->next_board[index] =
-                    (alive_neighbours == 2 || alive_neighbours == 3) ? ALIVE : DEAD;
-            } else {
-                g->next_board[index] =
-                    (alive_neighbours == 3) ? ALIVE : DEAD;
-            }
+        // Apply Game of Life rules.
+        bool cell = g->board[index];
+        if (cell == ALIVE) {
+            g->next_board[index] =
+                (alive_neighbours == 2 || alive_neighbours == 3) ? ALIVE : DEAD;
+        } else {
+            g->next_board[index] =
+                (alive_neighbours == 3) ? ALIVE : DEAD;
         }
     }
 
