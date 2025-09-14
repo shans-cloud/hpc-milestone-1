@@ -75,21 +75,25 @@ void board_update(struct Game *g) {
         for (int j = 1; j <= g->columns; j++) {
             int alive_neighbours = 0;
 
+            int top_row_index = (i-1) * g->padded_columns;
+            int middle_row_index = i * g->padded_columns;
+            int bottom_row_index = (i+1) * g->padded_columns;
+
             // Top row
-            alive_neighbours += g->board[(i-1) * g->padded_columns + (j-1)];
-            alive_neighbours += g->board[(i-1) * g->padded_columns + (j)];
-            alive_neighbours += g->board[(i-1) * g->padded_columns + (j+1)];
+            alive_neighbours += g->board[top_row_index + (j-1)];
+            alive_neighbours += g->board[top_row_index + (j)];
+            alive_neighbours += g->board[top_row_index + (j+1)];
 
             // Middle row
-            alive_neighbours += g->board[(i)   * g->padded_columns + (j-1)];
-            alive_neighbours += g->board[(i)   * g->padded_columns + (j+1)];
+            alive_neighbours += g->board[middle_row_index + (j-1)];
+            alive_neighbours += g->board[middle_row_index + (j+1)];
 
             // Bottom row
-            alive_neighbours += g->board[(i+1) * g->padded_columns + (j-1)];
-            alive_neighbours += g->board[(i+1) * g->padded_columns + (j)];
-            alive_neighbours += g->board[(i+1) * g->padded_columns + (j+1)];
+            alive_neighbours += g->board[bottom_row_index + (j-1)];
+            alive_neighbours += g->board[bottom_row_index + (j)];
+            alive_neighbours += g->board[bottom_row_index + (j+1)];
 
-            int index = i * g->padded_columns + j;
+            int index = middle_row_index + j;
 
             // Apply Game of Life rules.
             if (g->board[index] == ALIVE) {
