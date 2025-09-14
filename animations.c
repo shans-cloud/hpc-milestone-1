@@ -26,8 +26,9 @@ void animation_draw(const struct Game *g) {
     for (int i = 1; i <= g->rows; i++) {
         // Compute y only once.
         rect.y = (i-1) * CELL_SIZE;
+        int index = i * g->padded_columns;
         for (int j = 1; j <= g->columns; j++) {
-            if (g->board[i * g->padded_columns + j] == ALIVE) {
+            if (g->board[index + j] == ALIVE) {
                 rect.x = (j-1) * CELL_SIZE;
                 SDL_RenderFillRect(g->renderer, &rect);
             }
