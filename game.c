@@ -62,9 +62,10 @@ void board_populate(struct Game *g) {
     srand(SEED);
     // Initialising only the inner board, leaving the padding as DEAD.
     for (int i = 1; i <= g->rows; i++) {
+        int middle_row_index = i * g->padded_columns;
         for (int j = 1; j <= g->columns; j++) {
             if (rand() % 10 < DENSITY) {
-                g->board[i * g->padded_columns + j] = ALIVE;
+                g->board[middle_row_index + j] = ALIVE;
             }
         }
     }
